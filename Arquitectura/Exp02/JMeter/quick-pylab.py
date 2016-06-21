@@ -4,10 +4,31 @@ import numpy
 import pylab
 import random
 import unittest
+import os,sys
+import string
+from optparse import OptionParser
 
-#infile = "Box1/results.dat"
-#infile = "Box1-Remote/results-1.dat"
-infile = "Box3/results.dat"
+
+#-----------------------------------------------------
+parser = OptionParser()
+parser.add_option("-i", type = "string", dest="input",
+                  help="Input file with results", metavar="input" )
+
+
+parser.add_option("-o", type = "string", dest="output",
+                  help="Name of output figure", metavar="output" )
+
+(options, args) = parser.parse_args()
+
+if options.input is None:
+        parser.error("please give an input")
+
+if options.output is None:
+        parser.error("please give an ouput")
+#-----------------------------------------------------
+
+infile = options.input
+outfile = options.output
 
 def openResults( resultsfile ):
     lbs = []
@@ -77,4 +98,4 @@ ax.set_yscale('log')
 locs, lbs = pylab.xticks()
 pylab.setp(lbs, rotation=45)
 
-fig.savefig('fig1.png', bbox_inches='tight')
+fig.savefig(outfile, bbox_inches='tight')
