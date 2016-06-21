@@ -20,7 +20,7 @@ x = 0.0
 xmax = 0.0
 timeint = 1
 
-with open('concurrency-9000.csv') as inputfile:
+with open('result13000.csv') as inputfile:
     for line in inputfile:
 
         data = line[:-1].split(',')
@@ -60,5 +60,5 @@ inputfile.close()
 
 pylab.plot(pointsP1X,pointsP1Y, 'ro')
 pylab.ylabel('some numbers')
-pylab.show()
+#pylab.show()
 
