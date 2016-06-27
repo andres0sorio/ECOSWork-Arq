@@ -29,6 +29,7 @@ if options.output is None:
 
 infile = options.input
 outfile = options.output
+poslatency = 5
 
 def openResults( resultsfile ):
     lbs = []
@@ -46,7 +47,9 @@ def readData( infile ):
     with open(infile) as inputfile:
         for line in inputfile:
             data = line[:-1].split(',')
-            latency = float(data[5])
+	    if len(data) > 7:
+		    poslatency = 1
+            latency = float(data[poslatency])
             pointsP1.append(latency)
     inputfile.close()
     return pointsP1

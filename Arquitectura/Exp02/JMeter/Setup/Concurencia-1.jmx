@@ -17,7 +17,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">9000</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1000</stringProp>
         <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1465602104000</longProp>
         <longProp name="ThreadGroup.end_time">1465602104000</longProp>
@@ -87,11 +87,11 @@
               <time>true</time>
               <latency>true</latency>
               <timestamp>true</timestamp>
-              <success>false</success>
+              <success>true</success>
               <label>false</label>
-              <code>false</code>
-              <message>false</message>
-              <threadName>false</threadName>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
               <dataType>false</dataType>
               <encoding>false</encoding>
               <assertions>false</assertions>
@@ -103,14 +103,16 @@
               <responseHeaders>false</responseHeaders>
               <requestHeaders>false</requestHeaders>
               <responseDataOnError>false</responseDataOnError>
-              <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
               <assertionsResultsToSave>0</assertionsResultsToSave>
               <bytes>true</bytes>
               <threadCounts>true</threadCounts>
+              <sampleCount>true</sampleCount>
               <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/home/aosorio/JMeter/concurrency-9000.csv</stringProp>
+          <stringProp name="filename">/home/aosorio/GIT/ECOSWork/Arquitectura/Exp02/JMeter/Box2/24-06-2016/concurrency-1000-L.csv</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>

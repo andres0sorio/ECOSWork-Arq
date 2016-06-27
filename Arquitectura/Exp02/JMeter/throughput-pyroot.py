@@ -8,27 +8,22 @@ import datetime
 from datetime import date
 import ROOT
 from optparse import OptionParser
+from ROOT import TTimeStamp
+from ROOT import TDatime
 
 #-----------------------------------------------------
 parser = OptionParser()
 parser.add_option("-i", type = "string", dest="input",
                   help="Input file with results", metavar="input" )
 
-
-#parser.add_option("-o", type = "string", dest="output",
-#                  help="Name of output figure", metavar="output" )
-
 (options, args) = parser.parse_args()
 
 if options.input is None:
         parser.error("please give an input")
 
-#if options.output is None:
-#        parser.error("please give an ouput")
 #-----------------------------------------------------
 
 infile = options.input
-#outfile = options.output
 
 t0 = datetime.datetime
 ti = datetime.datetime
@@ -36,7 +31,9 @@ tlast = datetime.datetime
 
 x = 0.0
 xmax = 0.0
-timeint = 1.0
+timeint = 0.500
+convfactor = (1.0/timeint)
+poslatency = 5 #for backward compatibility with old data
 
 def openResults( resultsfile ):
     lbs = []
@@ -59,59 +56,86 @@ jpoint = 0
 for fname in filenames:
 
     gr = ROOT.TGraph()
+    gr_lat_th = ROOT.TGraph()
 
+    eventbin  = []
+    eventbins = []
+    timebins  = []
+    timenorm  = {}
+    isfirst = True
+    firsttime = 0.0
+    
     with open(fname) as inputfile:
 
-        eventbin  = []
-        eventbins = []
-        isfirst = True
-        
         for line in inputfile:
 
             data = line[:-1].split(',')
-            latency = float(data[5])
-            timestamp = float(data[0])
-            ti = datetime.datetime.fromtimestamp(timestamp/1000.0)
+	    if len(data) > 7:
+		    poslatency = 10
+            latency = float(data[poslatency]) 
+            timestamp = int( data[0] )
+	    
+	    if timestamp in timenorm:
+		    timenorm[timestamp].append(latency)
+	    else:
+		    timenorm[timestamp]  = [latency]
 
+    inputfile.close()
+
+    for timestamp in sorted(timenorm.keys()):
+
+	    ti = datetime.datetime.fromtimestamp(timestamp/1000.0)
+	    	    
             if isfirst:
-                t0 = ti
-                isfirst = False
-                continue
+		    t0 = ti
+		    isfirst = False
+		    firsttime = (t0.second + t0.microsecond/1000000.0)
+		    timebins.append(0.0)
+		    continue
 
             x = abs( ((ti - t0).seconds) + ((ti - t0).microseconds/1000000.0) )
 
-            if x > 3600:
-                continue
-            
-            if x > timeint:
-                eventbins.append(eventbin)
-                eventbin = []
-                t0 = ti
+	    if x > timeint:
+		    eventbins.append( eventbin )
+		    eventbin = []
+		    t0 = ti
+		    delta = (t0.second + t0.microsecond/1000000.0) - firsttime
+		    if delta < 0:
+			    delta = delta + 60.0
+		    timebins.append( delta )
 
-            eventbin.append( latency )
-            
-    inputfile.close()
+	    for lat in timenorm[timestamp]:
+		    eventbin.append(lat)
 
     ipoint = 0
 
     throughput = []
-    
+
     for bin in eventbins:
         throughput.append( float(len(bin)) )
-        gr.SetPoint(ipoint, ipoint + 1, float(len(bin)) )
+        gr.SetPoint(ipoint, timebins[ipoint], float(len(bin))*convfactor )
+	latencies = numpy.array(bin)
+	avg_latency = latencies.mean()
+	gr_lat_th.SetPoint(ipoint, float(len(bin))*convfactor, avg_latency)
         ipoint += 1
 
     th = numpy.array(throughput)
 
-    summary.SetPoint(jpoint, jpoint+1, th.mean() )
+    summary.SetPoint(jpoint, jpoint+1, th.mean() * convfactor )
     
-    cname = fname.split('/')[1].split('.')[0]
+    cname = "throughput_" + fname.split('/')[2].split('.')[0]
     
     c1 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
     c1.SetFillColor(10)
     c1.SetGridy()
     c1.cd()
-
+    
+    gr.SetMinimum(0.0)
+    gr.SetMaximum(2000.0)
+    
+    #gr.GetXaxis().SetTimeDisplay(1)
+    #gr.GetXaxis().SetTimeFormat("%M%S")
+    
     gr.SetTitle("Throughput graph")
     gr.GetXaxis().SetTitle("Time step")
     gr.GetXaxis().CenterTitle(True)
@@ -133,6 +157,34 @@ for fname in filenames:
 
     jpoint += 1
 
+    cname = "latvsthroug_" + fname.split('/')[2].split('.')[0]
+
+    c2 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
+    c2.SetFillColor(10)
+    c2.SetGridy()
+    c2.cd()
+    
+    gr_lat_th.SetMinimum(0.0)
+    gr_lat_th.SetMaximum(2000.0)
+    
+    gr_lat_th.SetTitle("Throughput graph")
+    gr_lat_th.GetXaxis().SetTitle("Throughput [samples/sec]")
+    gr_lat_th.GetXaxis().CenterTitle(True)
+    gr_lat_th.GetXaxis().SetLabelFont(42)
+    gr_lat_th.GetXaxis().SetTitleSize(0.05)
+    gr_lat_th.GetXaxis().SetTitleOffset(0.88)
+    gr_lat_th.GetXaxis().SetTitleFont(42)
+    gr_lat_th.GetYaxis().SetTitle("Average latency")
+    gr_lat_th.GetYaxis().CenterTitle(True)
+    gr_lat_th.GetYaxis().SetLabelFont(42)
+    gr_lat_th.GetYaxis().SetLabelSize(0.05)
+    gr_lat_th.GetYaxis().SetTitleSize(0.05)
+    gr_lat_th.GetYaxis().SetTitleOffset(0.91)
+    gr_lat_th.SetMarkerColor(4)
+    gr_lat_th.SetMarkerStyle(7)  
+    gr_lat_th.Draw("AP")
+
+    c2.Print( "./ThroughputResults/" + cname + ".png")
 
 c1 = ROOT.TCanvas("Summary", "Canvas for plot 1", 94,162,805,341)
 c1.SetFillColor(10)
