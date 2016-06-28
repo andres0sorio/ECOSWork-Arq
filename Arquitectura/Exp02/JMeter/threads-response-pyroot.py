@@ -25,25 +25,11 @@ if options.input is None:
 
 #-----------------------------------------------------
 
-infile = options.input
+fname = options.input
 
 t0 = datetime.datetime
 ti = datetime.datetime
 x  = 0.0
-
-poslatency = 10
-actthreads = 8
-
-def openResults( resultsfile ):
-	lbs = []
-	fnames = []
-	with open(resultsfile) as inputfile:
-		for line in inputfile:
-			data = line[:-1].split(',')
-			fnames.append( data[0] )
-			lbs.append( data[1] )
-	inputfile.close()
-	return fnames, lbs
 
 def drawGraphs( cgraph, canvas, title, xtitle, ytitle):
 	
@@ -66,71 +52,73 @@ def drawGraphs( cgraph, canvas, title, xtitle, ytitle):
 	cgraph.SetMarkerColor(4)
 	cgraph.SetMarkerStyle(7)  
 	
-filenames, labels = openResults( infile )
 
-for fname in filenames:
+act_threads  = {}
+nlines = 0
+http_error = 0
 
-	act_threads  = {}
-	nlines = 0
-	
-	with open(fname) as inputfile:
+with open(fname) as inputfile:
 		
-		for line in inputfile:
+	for line in inputfile:
 			
-			data      = line[:-1].split(',')
-			latency   = float(data[poslatency])
+		data      = line[:-1].split(',')
+			
+		try:
+			latency   = float(data[10])
 			elapsed   = float(data[1])
 			timestamp = int( data[0] )
 			actthread = int( data[8] )
-			
-			try:
-				httpcode  = int( data[2] )
-				if httpcode == 200:
-					if timestamp in act_threads:
-						act_threads[actthread].append( latency )
-					else:
-						act_threads[actthread]  = [latency]
-			except ValueError:
-				httpcode  = -1
+			httpcode  = int( data[2] )
+			if httpcode == 200:
+				if timestamp in act_threads:
+					act_threads[actthread].append( elapsed )
+				else:
+					act_threads[actthread]  = [elapsed]
+			else:
+			    http_error += 1
+			    
+		except ValueError:
+			httpcode  = -1
 				
-			nlines += 1
+		nlines += 1
 			
-	print nlines
-	print len(act_threads)
+print nlines
+print len(act_threads)
 	
-	inputfile.close()
+inputfile.close()
 
-	#...................................................................................................
-	ipoint = 0
-	gr1 = ROOT.TGraph()
+#...................................................................................................
+ipoint = 0
+gr1 = ROOT.TGraph()
+
+for threads in sorted(act_threads.keys()):
+
+	responses = numpy.array(act_threads[threads])
+	response_time = numpy.mean(responses)
+	gr1.SetPoint(ipoint, threads, response_time)
+	ipoint += 1
+
+cname = "thread_response_" + fname.split('/')[2].split('.')[0]
+print cname
+c1 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
+drawGraphs( gr1, c1, "Response time vs threads", "Number of active threads", "Response times in ms")
+c1.cd()
+gr1.Draw("APL")
 	
-	for threads in sorted(act_threads.keys()):
+#...................................................................................................
 
-		responses = numpy.array(act_threads[threads])
-		response_time = numpy.mean(responses)
-		gr1.SetPoint(ipoint, threads, response_time)
-		ipoint += 1
+hprof  = TProfile( 'hprof', 'Profile of pz versus px', 100, 0, 10000, 0, 50 )
 
-	cname = "thread_response_" + fname.split('/')[2].split('.')[0]
-	print cname
-	c1 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
-	drawGraphs( gr1, c1, "Response time vs threads", "Number of active threads", "Response times in ms")
-	c1.cd()
-	gr1.Draw("APL")
+for threads in sorted(act_threads.keys()):
+
+	responses = numpy.array(act_threads[threads])
+	response_time = numpy.mean(responses/1000.0)
+	hprof.Fill(threads, response_time)
 	
-	#...................................................................................................
+cname = "thread_response_prof_" + fname.split('/')[2].split('.')[0]
+print cname
+c1 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
+c1.cd()
+hprof.Draw()
 
-	hprof  = TProfile( 'hprof', 'Profile of pz versus px', 1000, 0, 5000, 0, 20 )
-
-	for threads in sorted(act_threads.keys()):
-
-		responses = numpy.array(act_threads[threads])
-		response_time = numpy.mean(responses/1000.0)
-		hprof.Fill(threads, response_time)
-		
-	cname = "thread_response_prof_" + fname.split('/')[2].split('.')[0]
-	print cname
-	c1 = ROOT.TCanvas(cname, "Canvas for plot 1", 94,162,805,341)
-	c1.cd()
-	hprof.Draw()
-	
+#...................................................................................................

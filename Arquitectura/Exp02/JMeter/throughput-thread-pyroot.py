@@ -32,6 +32,7 @@ x  = 0.0
 poslatency = 10
 actthreads = 8
 
+
 def openResults( resultsfile ):
 	lbs = []
 	fnames = []
@@ -71,27 +72,33 @@ for fname in filenames:
 	act_threads  = {}
 	transactions = {}
 	nlines = 0
+	http_error = 0
 	
 	with open(fname) as inputfile:
 		
 		for line in inputfile:
 			
 			data      = line[:-1].split(',')
-			latency   = float(data[poslatency])
-			elapsed   = float(data[1])
-			timestamp = int( data[0] )
-			actthread = int( data[8] )
-			httpcode  = int( data[2] )
+
+			try:
+				latency   = float(data[poslatency])
+				elapsed   = float(data[1])
+				timestamp = int( data[0] )
+				actthread = int( data[8] )
+				httpcode  = int( data[2] )
 			
-			if httpcode == 200:
-				if timestamp in act_threads:
-					act_threads[timestamp].append( actthread )
-					transactions[timestamp] += 1
-				
+				if httpcode == 200:
+					if timestamp in act_threads:
+						act_threads[timestamp].append( actthread )
+						transactions[timestamp] += 1
+					else:
+						act_threads[timestamp]  = [actthread]
+						transactions[timestamp] = 1
 				else:
-					act_threads[timestamp]  = [actthread]
-					transactions[timestamp] = 1
-				
+					http_error += 1
+					
+			except ValueError:
+				httpcode  = -1
 			nlines += 1
 			
 	print nlines		

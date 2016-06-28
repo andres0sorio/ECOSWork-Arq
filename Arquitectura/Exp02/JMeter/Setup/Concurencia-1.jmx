@@ -112,7 +112,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/home/aosorio/GIT/ECOSWork/Arquitectura/Exp02/JMeter/Box2/24-06-2016/concurrency-1000-L.csv</stringProp>
+          <stringProp name="filename">/home/aosorio/GIT/ECOSWork/Arquitectura/Exp02/JMeter/Box2/27-06-2016/concurrency-30000.csv</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>

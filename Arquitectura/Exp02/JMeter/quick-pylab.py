@@ -7,6 +7,7 @@ import unittest
 import os,sys
 import string
 from optparse import OptionParser
+import logging
 
 
 #-----------------------------------------------------
@@ -31,6 +32,8 @@ infile = options.input
 outfile = options.output
 poslatency = 5
 
+logging.basicConfig(filename='quick-pylab.log',level=logging.DEBUG)
+
 def openResults( resultsfile ):
     lbs = []
     fnames = []
@@ -44,13 +47,34 @@ def openResults( resultsfile ):
 
 def readData( infile ):
     pointsP1 = []
+    http_success = 0
+    http_error = 0
+    nlines = 0
+
     with open(infile) as inputfile:
-        for line in inputfile:
-            data = line[:-1].split(',')
-	    if len(data) > 7:
-		    poslatency = 1
-            latency = float(data[poslatency])
-            pointsP1.append(latency)
+	    
+	    for line in inputfile:
+		    data = line[:-1].split(',')
+
+		    try:
+			    if len(data) > 7:
+				    poslatency = 1
+			    latency = float(data[poslatency])
+			    httpcode  = int( data[2] )
+			    if httpcode == 200:
+				    pointsP1.append(latency)
+				    http_success += 1
+			    else:
+				    http_error += 1
+				    
+		    except ValueError:
+			    http_error += 1
+			    logging.error('Sample data had a strange behaviour')
+			    logging.info(line)
+
+		    nlines += 1
+		    
+    print http_error, http_success, nlines
     inputfile.close()
     return pointsP1
 

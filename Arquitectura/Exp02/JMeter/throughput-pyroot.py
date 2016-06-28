@@ -64,7 +64,7 @@ for fname in filenames:
     timenorm  = {}
     isfirst = True
     firsttime = 0.0
-    
+    http_error = 0
     with open(fname) as inputfile:
 
         for line in inputfile:
@@ -72,13 +72,21 @@ for fname in filenames:
             data = line[:-1].split(',')
 	    if len(data) > 7:
 		    poslatency = 10
-            latency = float(data[poslatency]) 
-            timestamp = int( data[0] )
-	    
-	    if timestamp in timenorm:
-		    timenorm[timestamp].append(latency)
-	    else:
-		    timenorm[timestamp]  = [latency]
+
+	    try:
+		    latency = float(data[poslatency]) 
+		    timestamp = int( data[0] )
+		    httpcode  = int( data[2] )
+		    if httpcode == 200:
+			    if timestamp in timenorm:
+				    timenorm[timestamp].append(latency)
+			    else:
+				    timenorm[timestamp]  = [latency]
+		    else:
+			    http_error += 1
+			    
+	    except ValueError:
+			httpcode  = -1
 
     inputfile.close()
 
