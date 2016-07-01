@@ -1,3 +1,10 @@
+#!/usr/bin/python
+
+"""
+send URL request (POST) to write a json document to our Mongo DB
+writes latency results to a file for latter processing
+"""
+
 from JsonEpisodeHelper import JsonEpisodeHelper
 
 import json
@@ -9,6 +16,9 @@ import random
 import unittest
 from time import sleep
 
+host = 'http://localhost:4567/api/episode/create'
+pointsP1 = []
+output = open('experiment-latency.dat', 'w')
 
 def generateData() :
     
@@ -33,16 +43,11 @@ def sendJson(host, data):
     print response
     return (end - start)
 
-host = 'http://localhost:4567/api/episode/create'
-
-pointsP1 = []
-
-output = open('experiment2-latency', 'w')
-
 def runLatencyExperiment(ntimes):
 
     for i in range(0,ntimes):
         data = generateData()
+        print data
         value = sendJson(host,data)
         pointsP1.append(value)
         print i
@@ -52,14 +57,4 @@ def runLatencyExperiment(ntimes):
 
 runLatencyExperiment(2)
 
-##pylab.hist(pointsP1, label='Latency')
-##pylab.title('Simple service simulation')
-##pylab.xlabel('reponse time [s]')
-##pylab.ylabel('Frecuency')
-#pylab.show()
-
-#output.close()
-
-
-
-
+output.close()
