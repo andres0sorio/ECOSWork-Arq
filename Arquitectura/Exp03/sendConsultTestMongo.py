@@ -8,43 +8,38 @@ import pylab
 import random
 import unittest
 from time import sleep
+import ast
 
-
-def getJson(url):
-
-    start = time.time()
-    response = urllib2.urlopen(url)
-    end = time.time()
-    print json.loads(response.read())
-    return (end - start)
-
-#host = 'http://localhost:4567/api/episode/create'
-host = 'http://maps.googleapis.com/maps/api/geocode/json?address=googleplex&sensor=false'
-
+cedula = 703927262
+url = 'http://localhost:4567/api/episode/get'
 pointsP1 = []
+output = open('consult_experiment.dat', 'w')
 
-output = open('experiment2-latency', 'w')
+def getJson(url,data):
+
+    req = urllib2.Request(url)
+    req.add_header('Content-Type', 'application/json')
+    start = time.time()
+    response = urllib2.urlopen(req, data)
+    end = time.time()
+    ##jdata = json.loads( response.read().decode("utf-8") )
+    response_json = json.load( response )
+    jdata = ast.literal_eval(response_json)
+
+    print len(jdata)
+   
 
 def runLatencyExperiment(ntimes):
 
     for i in range(0,ntimes):
-        value = getJson(host)
+        data = '{ cedula : ' + str(cedula) + '}'
+        value = getJson(url,data)
         pointsP1.append(value)
         print i
         sleep(0.050)
         points = str(value)
         output.write(points + '\n')
 
-runLatencyExperiment(2)
+runLatencyExperiment(1)
 
-##pylab.hist(pointsP1, label='Latency')
-##pylab.title('Simple service simulation')
-##pylab.xlabel('reponse time [s]')
-##pylab.ylabel('Frecuency')
-#pylab.show()
-
-#output.close()
-
-
-
-
+output.close()

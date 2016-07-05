@@ -9,15 +9,6 @@ class JsonEpisodeHelper(object):
 	self.medicamento = 'A'
         self.actividad = 'xx'
 
-    #def __init__(self, cedula, fecha, hora, nivel, medicamento, actividad):
-    #    """fields constructor"""
-    #    self.cedula = cedula
-    #    self.fecha = fecha
-    #    self.hora = hora
-    #    self.nivelDolor = nivel
-    #    self.medicamento = medicamento
-    #    self.actividad = actividad
-
     def setCedula(self, cedula):
         self.cedula = cedula
 
@@ -45,12 +36,7 @@ class JsonEpisodeHelper(object):
         line.append(self.medicamento)
         line.append(self.actividad)
         return ','.join(line)
-
-    def getCedula(self):
-        return self.cedula
         
-    def __eq__(self, other): 
-        return self.__dict__ == other.__dict__
 
 
 
