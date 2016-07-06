@@ -17,13 +17,13 @@ import unittest
 import logging
 from time import sleep
 
-host = 'http://localhost:4567/api/episode/create'
+host = 'http://157.253.17.148:4567/api/episode/create'
 pointsP1 = []
 output = open('experiment-latency.dat', 'w')
 waittime = 0.005
 failed_episodes = open('failed_episodes.dat', 'w')
 
-logging.basicConfig(filename='storeSimDataMongoHTTPS.log',level=logging.DEBUG)
+logging.basicConfig(filename='storeSimDataMongo.log',level=logging.DEBUG)
 logging.info('sendCreateTestMongo')
 
 def generateData( inputline) :

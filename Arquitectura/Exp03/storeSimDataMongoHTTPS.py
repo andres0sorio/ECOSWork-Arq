@@ -10,14 +10,14 @@ from JsonEpisodeHelper import JsonEpisodeHelper
 import json
 import urllib2
 import time
-import numpy
-import pylab
 import random
 import unittest
 import logging
+import ssl
+
 from time import sleep
 
-host = 'http://localhost:4567/api/episode/create'
+host = 'https://192.168.1.102:4567/api/episode/create'
 pointsP1 = []
 output = open('experiment-latency.dat', 'w')
 waittime = 0.005
@@ -26,6 +26,10 @@ failed_episodes = open('failed_episodes.dat', 'w')
 logging.basicConfig(filename='storeSimDataMongoHTTPS.log',level=logging.DEBUG)
 logging.info('sendCreateTestMongo')
 
+SslContext = ssl.create_default_context()
+SslContext.check_hostname = False
+SslContext.verify_mode = ssl.CERT_NONE
+        
 def generateData( inputline) :
 
     data = inputline.split(',')
@@ -46,7 +50,7 @@ def sendJson(host, data):
     req.add_header('Content-Type', 'application/json')
     try:
         start = time.time()
-        response = urllib2.urlopen(req, json.dumps(data))
+        response = urllib2.urlopen(req, json.dumps(data), context=SslContext)
         end = time.time()
         code = response.getcode()
         return (end - start), code

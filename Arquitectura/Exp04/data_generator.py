@@ -83,7 +83,8 @@ def create_fake_episode():
 if __name__ == "__main__":
 
     outfile = open('simulated_records.dat','w')
-
+    outfile_user = open('user_simulated_records.dat','w')
+    
     for i in range(100):
     	fake = Factory.create()
     	pacient_data = create_fake_stuff(fake)
@@ -98,7 +99,9 @@ if __name__ == "__main__":
             jepisode.setActividad(episode_data[4])
             #print pacient_data
             #print episode_data
-            print jepisode.getData()
+            #print jepisode.getData()
             outfile.write(jepisode.getData() + '\n')
-
+        outfile_user.write(pacient_data[0] + ',' + pacient_data[1] + '\n')
+        
     outfile.close()
+    outfile_user.close()

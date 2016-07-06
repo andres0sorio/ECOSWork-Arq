@@ -6,7 +6,7 @@ class JsonEpisodeHelper(object):
         self.fecha = 'XXXX/XXXX'
         self.hora = 'X:X:X'
         self.nivelDolor = 0
-	self.medicamento = 'A'
+        self.medicamento = "A"
         self.actividad = 'xx'
 
     #def __init__(self, cedula, fecha, hora, nivel, medicamento, actividad):

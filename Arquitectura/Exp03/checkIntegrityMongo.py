@@ -10,7 +10,7 @@ import unittest
 from time import sleep
 import ast
 
-url = 'http://localhost:4567/api/episode/get'
+url = 'http://192.168.1.102:4567/api/episode/get'
 sim_data = 'simulated_records.dat'
 
 def getJson(url,data):
