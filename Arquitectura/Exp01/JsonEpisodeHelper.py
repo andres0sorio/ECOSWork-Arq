@@ -1,5 +1,7 @@
-
 class JsonEpisodeHelper(object):
+    """
+    Rewrite of JsonEpisodeHelper java class
+    """
     def __init__(self):
         """standard constructor"""
         self.id = 0

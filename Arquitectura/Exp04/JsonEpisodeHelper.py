@@ -1,5 +1,6 @@
-
 class JsonEpisodeHelper(object):
+    """
+    """
     def __init__(self):
         """standard constructor"""
         self.cedula = 0
@@ -37,6 +38,3 @@ class JsonEpisodeHelper(object):
         line.append(self.actividad)
         return ','.join(line)
         
-
-
-

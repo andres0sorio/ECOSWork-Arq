@@ -1,6 +1,8 @@
 from Migrana import Migrana
 
 class Episodio(object):
+    """
+    """
     def __init__(self):
         """standard constructor"""
         self.iD = 0

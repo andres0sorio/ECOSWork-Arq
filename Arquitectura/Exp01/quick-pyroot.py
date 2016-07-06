@@ -1,8 +1,25 @@
 #!/usr/bin/env python
 
-import ROOT
+"""
 
-filename = 'data/experiment3-latency.csv'
+"""
+
+import ROOT
+from optparse import OptionParse
+
+#-----------------------------------------------------
+parser = OptionParser()
+parser.add_option("-i", type = "string", dest="input",
+                  help="Input file with results", metavar="input" )
+
+(options, args) = parser.parse_args()
+
+if options.input is None:
+        parser.error("please give an input")
+
+#-----------------------------------------------------
+
+filename = options.input
 
 gr = ROOT.TGraph()
 h1 = ROOT.TH1F("Exp1","Latency (0.5 ms per bin)", 100, 0.0, 50.00)

@@ -1,4 +1,6 @@
 class Migrana(object):
+    """
+    """
     def __init__(self):
         self.iD = 0
         self.fecha = "OOOOOO"
