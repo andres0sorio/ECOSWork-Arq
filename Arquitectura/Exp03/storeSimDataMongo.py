@@ -11,21 +11,19 @@ from ExpPkg import JsonEpisodeHelper
 import json
 import urllib2
 import time
-import numpy
-import pylab
 import random
 import unittest
 import logging
 from time import sleep
 
 #host = 'http://157.253.17.148:4567/api/episode/create'
-host = 'http://localhost:4567/api/episode/create'
-pointsP1 = []
-output = open('experiment-latency.dat', 'w')
-waittime = 0.005
-failed_episodes = open('failed_episodes.dat', 'w')
+host = 'http://localhost:4567/api/user/create'
 
-logging.basicConfig(filename='storeSimDataMongo.log',level=logging.DEBUG)
+pointsP1 = []
+waittime = 0.005
+failed_episodes = open('logs/failed_episodes.dat', 'w')
+
+logging.basicConfig(filename='logs/storeSimDataMongo.log',level=logging.DEBUG)
 logging.info('sendCreateTestMongo')
 
 def generateData( inputline) :
@@ -51,9 +49,8 @@ def sendJson(host, data):
         response = urllib2.urlopen(req, json.dumps(data))
         end = time.time()
         code = response.getcode()
+        logging.info( 'HTTPCode = ' + str(code) )
         return (end - start), code
-    except urllib2.HTTPError, e:
-        logging.error( 'HTTPError = ' + str(e.code) )
     except urllib2.URLError, e:
         logging.error('URLError = ' + str(e.reason) )
 
@@ -62,7 +59,7 @@ def sendJson(host, data):
 def saveEpisode(data):
     failed_episodes.write(str(data) + '\n')
     
-def runLatencyExperiment(fname):
+def saveData(fname):
 
     with open(fname) as inputfile:
         
@@ -70,11 +67,12 @@ def runLatencyExperiment(fname):
             data = generateData( line[:-1] )
             success = False
             value, code = sendJson(host,data)
+
             if code == 200:
                 pointsP1.append(value)
                 success = True
-                logging.info('Success sending episode: httpcode ' + str(code))
             elif code <= 0:
+
                 for j in range(3):
                     logging.info('will try to send episode again')
                     sleep(waittime)
@@ -82,24 +80,22 @@ def runLatencyExperiment(fname):
                     if code == 200:
                         pointsP1.append(value)
                         success = True
-                        logging.info('Success sending episode: httpcode ' + str(code))
                         break
                     else:
-                        logging.info('Failed attemp no')
+                        logging.info('Failed attemp number: ' + str(j+1) )
                         continue
+
             if success == False:
                 saveEpisode(data)
             else:
                 points = str(value)
-                output.write(points + '\n')
-            
+                logging.info('Success sending episode: httpcode ' + str(code) + ' ' + points)
+                
             sleep(0.050)
         
     inputfile.close()
 
-runLatencyExperiment("simulated_records.dat")
-
-output.close()
+saveData("data/simulated_records.dat")
 
 failed_episodes.close()
 

@@ -11,18 +11,17 @@ from ExpPkg import JsonEpisodeHelper
 import json
 import urllib2
 import time
-import numpy
-import pylab
 import random
 import unittest
 import logging
 from time import sleep
 
-#host = 'http://localhost:4567/api/episode/create'
-host = 'http://157.253.17.152:8080/api/episode/create'
+host = 'http://localhost:4567/api/user/create'
+#host = 'http://157.253.17.152:8080/api/episode/create'
 pointsP1 = []
 waittime = 0.005
-output = open('experiment-latency.dat', 'w')
+output = open('data/experiment-latency.dat', 'w')
+output_3xcols = open('data/experiment-latency-3xcols.dat', 'w')
 failed_episodes = open('failed_episodes.dat', 'w')
 
 logging.basicConfig(filename='sendCreateTestMongo.log',level=logging.DEBUG)
@@ -30,7 +29,7 @@ logging.info('sendCreateTestMongo')
 
 def generateData() :
     
-    pacienteID = 456124
+    pacienteID = 26253282
     fecha = '2016/12/31'
     hora = '12:00:00'
 
@@ -51,8 +50,6 @@ def sendJson(host, data):
         end = time.time()
         code = response.getcode()
         return (end - start), code
-    except urllib2.HTTPError, e:
-        logging.error( 'HTTPError = ' + str(e.code) )
     except urllib2.URLError, e:
         logging.error('URLError = ' + str(e.reason) )
 
@@ -90,7 +87,8 @@ def runLatencyExperiment(ntimes):
         else:
             points = str(value)
             httpcode = str(code)
-            output.write(points + ',' + httpcode + '\n')
+            output.write( points + '\n')
+            output_3xcols.write(str(i) + ',' + httpcode + ',' + points + '\n')
             
         sleep(0.010)
 

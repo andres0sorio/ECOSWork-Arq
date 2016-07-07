@@ -1,4 +1,12 @@
 {
+
+  /*
+    
+    
+    this is script reads 1 column data
+
+   */
+
   ifstream in;
 
   gStyle->SetOptStat(0);

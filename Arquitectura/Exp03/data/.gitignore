@@ -1,2 +1,6 @@
+*.png
+*.pyc
 *.dat
-*.csv
+*.log
+*.json
+data/*.dat

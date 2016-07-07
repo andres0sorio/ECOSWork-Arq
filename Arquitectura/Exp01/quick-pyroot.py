@@ -2,6 +2,8 @@
 
 """
 
+ 3 column data format: i, httpcode, latency
+
 """
 
 import ROOT
