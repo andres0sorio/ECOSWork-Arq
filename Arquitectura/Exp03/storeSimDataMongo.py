@@ -4,8 +4,9 @@
 send URL request (POST) to write a json document to our Mongo DB
 writes latency results to a file for latter processing
 """
-
-from JsonEpisodeHelper import JsonEpisodeHelper
+import sys
+sys.path.append('../')
+from ExpPkg import JsonEpisodeHelper
 
 import json
 import urllib2
@@ -17,7 +18,8 @@ import unittest
 import logging
 from time import sleep
 
-host = 'http://157.253.17.148:4567/api/episode/create'
+#host = 'http://157.253.17.148:4567/api/episode/create'
+host = 'http://localhost:4567/api/episode/create'
 pointsP1 = []
 output = open('experiment-latency.dat', 'w')
 waittime = 0.005
@@ -54,8 +56,8 @@ def sendJson(host, data):
         logging.error( 'HTTPError = ' + str(e.code) )
     except urllib2.URLError, e:
         logging.error('URLError = ' + str(e.reason) )
-    finally:
-        return -1, -1
+
+    return -1, -1
 
 def saveEpisode(data):
     failed_episodes.write(str(data) + '\n')

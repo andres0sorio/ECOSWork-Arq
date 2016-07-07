@@ -5,7 +5,7 @@
 """
 
 import ROOT
-from optparse import OptionParse
+from optparse import OptionParser
 
 #-----------------------------------------------------
 parser = OptionParser()

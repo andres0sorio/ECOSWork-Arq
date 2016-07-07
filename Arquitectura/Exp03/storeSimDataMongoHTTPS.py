@@ -4,8 +4,9 @@
 send URL request (POST) to write a json document to our Mongo DB
 writes latency results to a file for latter processing
 """
-
-from JsonEpisodeHelper import JsonEpisodeHelper
+import sys
+sys.path.append('../')
+from ExpPkg import JsonEpisodeHelper
 
 import json
 import urllib2

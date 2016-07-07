@@ -3,7 +3,9 @@ import datetime
 import time 
 import random
 import time
-from JsonEpisodeHelper import JsonEpisodeHelper
+import sys
+sys.path.append('../')
+import ExpPkg
 
 drugs = ['dolex','advil','ultra','ibopruf','tylenol']
 activities = ['work','sport','gym','tv','eating','reading']

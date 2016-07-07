@@ -4,9 +4,10 @@
 send URL request (POST) to write a json document to our Postgres DB
 plots latency results directly using pyplot histogram
 """
-
-from Episodio import Episodio
-from Migrana import Migrana
+import sys
+sys.path.append('../')
+from ExpPkg import Episodio
+from ExpPkg import Migrana
 
 import json
 import urllib2

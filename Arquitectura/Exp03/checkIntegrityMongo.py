@@ -1,4 +1,6 @@
-from JsonEpisodeHelper import JsonEpisodeHelper
+import sys
+sys.path.append('../')
+from ExpPkg import JsonEpisodeHelper
 
 import json
 import urllib2

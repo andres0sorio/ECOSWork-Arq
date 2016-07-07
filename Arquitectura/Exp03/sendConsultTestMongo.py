@@ -1,4 +1,6 @@
-from JsonEpisodeHelper import JsonEpisodeHelper
+import sys
+sys.path.append('../')
+from ExpPkg import JsonEpisodeHelper
 
 import json
 import urllib2
@@ -11,7 +13,11 @@ from time import sleep
 import ast
 
 cedula = 703927262
-url = 'http://localhost:4567/api/episode/get'
+#email = "david.fms22@gmail.com"
+email = "test@correo.com"
+#url = 'http://localhost:4567/api/episode/get'
+url = 'http://157.253.211.97:4567/api/doc/get'
+
 pointsP1 = []
 output = open('consult_experiment.dat', 'w')
 
@@ -22,7 +28,8 @@ def getJson(url,data):
     start = time.time()
     response = urllib2.urlopen(req, data)
     end = time.time()
-    ##jdata = json.loads( response.read().decode("utf-8") )
+    print response.getcode()
+    #jdata = json.loads( response.read().decode("utf-8") )
     response_json = json.load( response )
     jdata = ast.literal_eval(response_json)
 
@@ -32,7 +39,8 @@ def getJson(url,data):
 def runLatencyExperiment(ntimes):
 
     for i in range(0,ntimes):
-        data = '{ cedula : ' + str(cedula) + '}'
+        data = '{ cedula : ' + str(cedula) + ', email : ' + '"' + email + '"' + ' }'
+        print data
         value = getJson(url,data)
         pointsP1.append(value)
         print i
