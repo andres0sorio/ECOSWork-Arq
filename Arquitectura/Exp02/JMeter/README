@@ -1,0 +1,21 @@
+Usage:
+
+latencies_histos.py: takes as argument a file that contains a list of data files. Examples:
+
+python -i latencies_histos.py -i Box2/26-06-2016/results.dat 
+
+* throughput-pyroot.py: takes as argument a file that contains a list of data files. Examples:
+
+python -i throughput-pyroot.py -i Box2/26-06-2016/results.dat 
+python -i throughput-pyroot.py -i RasPi/07-07-2016/results.dat 
+
+* throughput-thread-pyroot.py: takes as argument a file that contains a list of data files. Examples:
+
+python -i throughput-thread-pyroot.py -i Box2/26-06-2016/results.dat 
+python -i throughput-thread-pyroot.py -i RasPi/07-07-2016/results.dat 
+
+* threads-response-pyroot.py : takes as argument, a single file with data. Examples:
+
+python -i threads-response-pyroot.py -i Box2/26-06-2016/concurrency-1000.csv 
+python -i threads-response-pyroot.py -i RasPi/07-07-2016/concurrency-1000-nginx-ssl.csv
+
