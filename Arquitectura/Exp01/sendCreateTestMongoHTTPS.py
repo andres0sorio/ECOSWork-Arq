@@ -8,27 +8,25 @@ import sys
 sys.path.append('../')
 from ExpPkg import JsonEpisodeHelper
 
+import requests
 import json
-import urllib2
 import time
 import random
 import unittest
 import logging
 from time import sleep
 
-#host = 'http://localhost:4567/api/user/create' #ok
-
-#host = 'http://box1.as-experiments.test:8080/api/user/create'  # ok box 1
-host = 'http://server.as-experiments.test:8080/api/user/create' #    B0
+#host = 'https://localhost:4567/api/user/create' #ok
+host = 'https://server.as-experiments.test:8089/api/user/create' # B0
 
 pointsP1 = []
 waittime = 0.005
-output = open('data/experiment-latency.dat', 'w')
-output_3xcols = open('data/experiment-latency-3xcols.dat', 'w')
-failed_episodes = open('data/failed_episodes.dat', 'w')
+output = open('data/experiment-latency-ssl.dat', 'w')
+output_3xcols = open('data/experiment-latency-3xcols-ssl.dat', 'w')
+failed_episodes = open('data/failed_episodes-ssl.dat', 'w')
 
 logging.basicConfig(filename='logs/sendCreateTestMongo.log',level=logging.DEBUG,format='%(asctime)s %(message)s')
-logging.info('sendCreateTestMongo')
+logging.info('sendCreateTestMongoSSL')
 
 def generateData() :
     
@@ -45,17 +43,16 @@ def generateData() :
 
 def sendJson(host, data):
 
-    req = urllib2.Request(host)
-    req.add_header('Content-Type', 'application/json')
+    headers = {'Content-Type': 'application/json'}
     try:
         start = time.time()
-        response = urllib2.urlopen(req, json.dumps(data))
+        response = requests.post( host, data=json.dumps(data), headers=headers, verify=False)
         end = time.time()
-        code = response.getcode()
+        code = response.status_code
         return (end - start), code
-    except urllib2.URLError, e:
-        logging.error('URLError = ' + str(e.reason) )
-
+    except requests.exceptions.RequestException as e:
+        logging.error('URLError = ' + str(e.message) )
+    
     return -1, -1
 
 def saveEpisode(data):

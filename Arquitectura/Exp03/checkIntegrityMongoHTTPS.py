@@ -8,8 +8,8 @@ import sys
 sys.path.append('../')
 from ExpPkg import JsonEpisodeHelper
 
+import requests
 import json
-import urllib2
 import time
 import random
 import unittest
@@ -24,30 +24,34 @@ email = "foobar@doctor.com" # authorized profile
 
 #................................................................
 
-#host = 'http://192.168.1.102:4567/api/doc/get'
-#host = 'http://localhost:4567/api/doc/get'
-
+host = 'https://localhost:4567/api/doc/get'
 sim_data = 'data/simulated_records.dat'
+
+logging.basicConfig(filename='logs/checkIntegrityMongoHTTPS.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
+logging.info('checkIntegrityMongoHTTPS')
 
 def getJson(host,data):
 
-    req = urllib2.Request(host)
-    req.add_header('Content-Type', 'application/json')
+    headers = {'Content-Type': 'application/json'}
     try:
         start = time.time()
-        response = urllib2.urlopen(req, data)
+        response = requests.post( host, data=json.dumps(data), headers=headers, verify=False)
         end = time.time()
-        response_json = json.load( response )
-        jdata = ast.literal_eval(response_json)
+        print response
+        try:
+            response_json = response.json() 
+            print response_json
+        except ValueError as e:
+            print e.message
 
-        for jd in jdata:
-            del jd['_id']
+        #jdata = ast.literal_eval(response_json)
+        #for jd in jdata:
+        #    del jd['_id']
             
-        return jdata
-    
-    except urllib2.URLError, e:
-        logging.error('URLError = ' + str(e.reason) )
-        return []
+    except requests.exceptions.RequestException as e:
+        logging.error('URLError = ' + str(e.message) )
+
+    return []
 
 def getObject(inputline):
 
@@ -76,7 +80,7 @@ def checkIntegrity(fname):
                 episodes_cedula[cedula].append( episode )
             else:
                 episodes_cedula[cedula]  = [episode]
-
+            break
         inputfile.close()
 
         #print len(episodes_cedula)

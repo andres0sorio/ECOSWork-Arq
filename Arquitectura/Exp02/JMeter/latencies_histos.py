@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import numpy
 import random
 import unittest
 import time
@@ -83,8 +82,8 @@ for fname in filenames:
 	h1name = "Latency_" + str(ndata)
 	h2name = "Elapsed_" + str(ndata)
 	
-	h1 = ROOT.TH1F(h1name,"Latency (2.0 ms per bin)", 100, 0.0, 200.00)
-	h2 = ROOT.TH1F(h2name,"Elapsed (2.0 ms per bin)", 100, 0.0, 200.00)
+	h1 = ROOT.TH1F(h1name,"Latency (JMeter post request)", 120, 0.0, 1200.00)
+	h2 = ROOT.TH1F(h2name,"Elapsed (JMeter post request)", 120, 0.0, 1200.00)
 		
 	with open(fname) as inputfile:
 		
@@ -117,7 +116,7 @@ for fname in filenames:
 
 isfirst = True
 
-legend = TLegend(0.68,0.68,0.989,0.939)
+legend = TLegend(0.7762963,0.5756522,0.9792593,0.7147826)
 
 ncolor = [1,2,3,4,5,6,7,8,9,10]
 
@@ -127,21 +126,22 @@ c1.SetGridy()
 c1.SetLogy()
 c1.cd()
 
+labels =['1000','2000','4000','6000','8000']
+
 ndata = 0
 for h in lat_histos:
 	h.SetLineColor(ncolor[ndata])
 	h.SetLineWidth(2)
-	dataset = "N_" + str(ndata)
+	dataset = labels[ndata]
 	legend.AddEntry(h,dataset,"l")
 	if isfirst:
 		
-		h.GetXaxis().SetTitle("Latency [ms]")
+		h.GetXaxis().SetTitle("Latency [10 ms per bin]")
 		h.GetYaxis().SetTitle("Samples (normalized)")
 		h.DrawNormalized()
 		isfirst = False
 		ndata += 1
 		continue
-
 	
 	h.DrawNormalized("SAME")
 	ndata += 1

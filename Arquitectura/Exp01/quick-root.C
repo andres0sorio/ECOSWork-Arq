@@ -2,16 +2,15 @@
 
   /*
     
-    
     this is script reads 1 column data
-
+    
    */
 
   ifstream in;
 
   gStyle->SetOptStat(0);
 
-  in.open("experiment-latency-1.dat");
+  in.open("data/08-07-2016/experiment-latency.dat");
   
   double time;
   int np = 0; 
@@ -21,13 +20,14 @@
   
   TH1D * histos[15]; //we need approx. 15 TGraphs (1 per dataset)
   
-  histos[0] = new TH1D("Exp1","Latency histogram(s)",100, 0.0, 0.100);
-  histos[1] = new TH1D("Exp2","Nginx balancer Latency",100, 0.0, 0.100);
+  histos[0] = new TH1D("Exp1","Writting episodes latency histogram(s)"  ,100, 0.0, 100);
+  histos[1] = new TH1D("Exp2","Nginx balancer Latency",100, 0.0, 100);
+  histos[2] = new TH1D("Exp3","Nginx balancer Latency",100, 0.0, 100);
   
   while ( in.good() ) 
   {
     in >> xx;
-    histos[0]->Fill(xx);
+    histos[0]->Fill(xx*1000.0);
     ++pindex;
     
   }
@@ -35,7 +35,7 @@
   std::cout << "Total dataset read " << pindex << " " << std::endl;
 
   in.close();
-  in.open("experiment-latency-2.dat");
+  in.open("data/08-07-2016/experiment-latency-box0.dat");
   
   pindex = 0;
   
@@ -43,7 +43,7 @@
   {
     
     in >> xx;
-    histos[1]->Fill(xx);
+    histos[1]->Fill(xx*1000.0);
     ++pindex;
     
   }
@@ -51,6 +51,22 @@
   
   in.close();
   
+  in.open("data/08-07-2016-SSL/experiment-latency-ssl.dat");
+  
+  pindex = 0;
+  
+  while ( in.good() ) 
+  {
+    
+    in >> xx;
+    histos[2]->Fill(xx*1000.0);
+    ++pindex;
+    
+  }
+  std::cout << "Total dataset read " << pindex << " " << std::endl;
+  
+  in.close();
+
   TCanvas * canvas = new TCanvas("Plot1", "Canvas for plot 1", 94, 262,700, 502 );
   canvas->SetFillColor(10);
   
@@ -77,14 +93,18 @@
   histos[0]->Draw();
 
   histos[1]->SetFillColor(38);
+  histos[2]->SetFillColor(38);
+
   histos[1]->Draw("SAME");
+  histos[2]->Draw("SAME");
   
   TLegend * legend = new TLegend(0.72,0.70,0.96,0.89,NULL,"brNDC");
-  legend->AddEntry (histos[0], "Local", "f" );
-  legend->AddEntry (histos[1], "Nginx (Rpi)", "f" );
+  legend->AddEntry (histos[0], "Direct", "f" );
+  legend->AddEntry (histos[1], "Balancer", "f" );
+  legend->AddEntry (histos[2], "Balancer+SSL", "f" );
   
   legend->Draw();
-    
+  
 
 }
 

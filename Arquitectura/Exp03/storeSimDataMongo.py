@@ -16,14 +16,14 @@ import unittest
 import logging
 from time import sleep
 
-#host = 'http://157.253.17.148:4567/api/episode/create'
-host = 'http://localhost:4567/api/user/create'
+host = 'http://server.as-experiments.test:8080/api/user/create'
+#host = 'http://localhost:4567/api/user/create'
 
 pointsP1 = []
 waittime = 0.005
 failed_episodes = open('logs/failed_episodes.dat', 'w')
 
-logging.basicConfig(filename='logs/storeSimDataMongo.log',level=logging.DEBUG)
+logging.basicConfig(filename='logs/storeSimDataMongo.log',level=logging.DEBUG,format='%(asctime)s %(message)s')
 logging.info('sendCreateTestMongo')
 
 def generateData( inputline) :
@@ -58,9 +58,12 @@ def sendJson(host, data):
 
 def saveEpisode(data):
     failed_episodes.write(str(data) + '\n')
-    
-def saveData(fname):
 
+
+
+
+def saveData(fname):
+    counter = 0
     with open(fname) as inputfile:
         
 	for line in inputfile:
@@ -76,7 +79,8 @@ def saveData(fname):
                 for j in range(3):
                     logging.info('will try to send episode again')
                     sleep(waittime)
-                    value, code = sendJson(host,data)
+                    #value, code = sendJson(host,data)
+                    code = -1
                     if code == 200:
                         pointsP1.append(value)
                         success = True
@@ -90,9 +94,12 @@ def saveData(fname):
             else:
                 points = str(value)
                 logging.info('Success sending episode: httpcode ' + str(code) + ' ' + points)
-                
-            sleep(0.050)
-        
+
+            counter += 1
+            sleep(0.001)
+            if counter >= 500:
+                break
+            
     inputfile.close()
 
 saveData("data/simulated_records.dat")

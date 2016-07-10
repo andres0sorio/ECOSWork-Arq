@@ -17,9 +17,8 @@ import logging
 from time import sleep
 
 #host = 'http://localhost:4567/api/user/create' #ok
-
 #host = 'http://box1.as-experiments.test:8080/api/user/create'  # ok box 1
-host = 'http://server.as-experiments.test:8080/api/user/create' #    B0
+#host = 'http://server.as-experiments.test:8080/api/user/create' #    B0
 
 pointsP1 = []
 waittime = 0.005

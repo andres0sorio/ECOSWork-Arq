@@ -20,8 +20,9 @@ import logging
 #................................................................
 
 cedula = 703927262
-#email = "david.fms22@gmail.com"
-email = "test@correo.com"
+#email = "autenticated_user@gmail.com"
+email = "foobar@doctor.com"
+#email = "test@correo.com"
 #................................................................
 
 url = 'http://localhost:4567/api/doc/get'
@@ -38,10 +39,9 @@ def getJson(url,data):
         start = time.time()
         response = urllib2.urlopen(req, data)
         end = time.time()
-        logging.info( 'HTTPCode = ' + str(code) )
         response_json = json.load( response )
         jdata = ast.literal_eval(response_json)
-
+        logging.info( 'HTTPCode = ' + str(response.getcode() ) )
         return response.getcode(), len(jdata)
     
     except urllib2.URLError, e:

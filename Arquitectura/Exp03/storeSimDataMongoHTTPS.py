@@ -8,29 +8,25 @@ import sys
 sys.path.append('../')
 from ExpPkg import JsonEpisodeHelper
 
+import requests
 import json
-import urllib2
 import time
 import random
 import unittest
 import logging
-import ssl
 
 from time import sleep
 
-host = 'https://192.168.1.102:4567/api/episode/create'
+host = 'https://localhost:4567/api/user/create'
+
 pointsP1 = []
-output = open('experiment-latency.dat', 'w')
+output = open('data/experiment-latency.dat', 'w')
 waittime = 0.005
-failed_episodes = open('failed_episodes.dat', 'w')
+failed_episodes = open('logs/failed_episodes.dat', 'w')
 
-logging.basicConfig(filename='storeSimDataMongoHTTPS.log',level=logging.DEBUG)
-logging.info('sendCreateTestMongo')
+logging.basicConfig(filename='logs/storeSimDataMongoHTTPS.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
+logging.info('sendCreateTestMongoHTTPS')
 
-SslContext = ssl.create_default_context()
-SslContext.check_hostname = False
-SslContext.verify_mode = ssl.CERT_NONE
-        
 def generateData( inputline) :
 
     data = inputline.split(',')
@@ -47,20 +43,19 @@ def generateData( inputline) :
 
 def sendJson(host, data):
 
-    req = urllib2.Request(host)
-    req.add_header('Content-Type', 'application/json')
+    headers = {'Content-Type': 'application/json'}
     try:
         start = time.time()
-        response = urllib2.urlopen(req, json.dumps(data), context=SslContext)
+        response = requests.post( host, data=json.dumps(data), headers=headers, verify=False)
         end = time.time()
-        code = response.getcode()
+        code = response.status_code
+        if code == 200:
+            logging.info('Success sending episode: httpcode ' + str(code))
         return (end - start), code
-    except urllib2.HTTPError, e:
-        logging.error( 'HTTPError = ' + str(e.code) )
-    except urllib2.URLError, e:
-        logging.error('URLError = ' + str(e.reason) )
-    finally:
-        return -1, -1
+    except requests.exceptions.RequestException as e:
+        logging.error('URLError = ' + str(e.message) )
+    
+    return -1, -1
 
 def saveEpisode(data):
     failed_episodes.write(str(data) + '\n')
@@ -100,7 +95,7 @@ def runLatencyExperiment(fname):
         
     inputfile.close()
 
-runLatencyExperiment("simulated_records.dat")
+runLatencyExperiment("data/simulated_records.dat")
 
 output.close()
 

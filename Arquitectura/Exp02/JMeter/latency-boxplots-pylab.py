@@ -91,7 +91,7 @@ ax = fig.add_subplot(111)
 
 bp = ax.boxplot(data, patch_artist=True)
 
-fig.suptitle('Concurrency experiments Box1', fontsize=14, fontweight='bold')
+fig.suptitle('Concurrency experiments balancer (no SSL)', fontsize=14, fontweight='bold')
 
 ## change outline color, fill color and linewidth of the boxes
 for box in bp['boxes']:

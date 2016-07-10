@@ -129,7 +129,8 @@ for fname in filenames:
 
     th = numpy.array(throughput)
 
-    summary.SetPoint(jpoint, jpoint+1, th.mean() * convfactor )
+    #summary.SetPoint(jpoint, (jpoint+1), th.mean() * convfactor )
+    summary.SetPoint(jpoint, float(labels[jpoint]), th.mean() * convfactor )
     
     cname = "throughput_" + fname.split('/')[2].split('.')[0]
     
@@ -144,14 +145,16 @@ for fname in filenames:
     #gr.GetXaxis().SetTimeDisplay(1)
     #gr.GetXaxis().SetTimeFormat("%M%S")
     
-    gr.SetTitle("Throughput graph")
+    gr.SetTitle("Throughput - Expected users in 10 s")
+    #gr->SetMarkerColor(2)
+    #gr->SetMarkerStyle(4)
     gr.GetXaxis().SetTitle("Time step")
     gr.GetXaxis().CenterTitle(True)
     gr.GetXaxis().SetLabelFont(42)
     gr.GetXaxis().SetTitleSize(0.05)
     gr.GetXaxis().SetTitleOffset(0.88)
     gr.GetXaxis().SetTitleFont(42)
-    gr.GetYaxis().SetTitle("Throughput [samples/sec]")
+    gr.GetYaxis().SetTitle("Throughput [requests/sec]")
     gr.GetYaxis().CenterTitle(True)
     gr.GetYaxis().SetLabelFont(42)
     gr.GetYaxis().SetLabelSize(0.05)
@@ -176,7 +179,7 @@ for fname in filenames:
     gr_lat_th.SetMaximum(2000.0)
     
     gr_lat_th.SetTitle("Throughput graph")
-    gr_lat_th.GetXaxis().SetTitle("Throughput [samples/sec]")
+    gr_lat_th.GetXaxis().SetTitle("Throughput [requests/sec]")
     gr_lat_th.GetXaxis().CenterTitle(True)
     gr_lat_th.GetXaxis().SetLabelFont(42)
     gr_lat_th.GetXaxis().SetTitleSize(0.05)
@@ -203,20 +206,20 @@ summary.SetMarkerColor(4)
 summary.SetMarkerStyle(21)
 summary.SetMarkerSize(0.8)
    
-summary.SetTitle("Throughput graph")
+summary.SetTitle("Throughput - Concurrent users expected in 10 s")
 summary.GetXaxis().SetTitle("Concurrent users")
+summary.SetMarkerColor(2)
+summary.SetMarkerStyle(4)
 summary.GetXaxis().CenterTitle(True)
 summary.GetXaxis().SetLabelFont(42)
 summary.GetXaxis().SetTitleSize(0.05)
 summary.GetXaxis().SetTitleOffset(0.88)
 summary.GetXaxis().SetTitleFont(42)
-summary.GetYaxis().SetTitle("Throughput [samples/sec]")
+summary.GetYaxis().SetTitle("Throughput [requests/sec]")
 summary.GetYaxis().CenterTitle(True)
 summary.GetYaxis().SetLabelFont(42)
 summary.GetYaxis().SetLabelSize(0.05)
 summary.GetYaxis().SetTitleSize(0.05)
 summary.GetYaxis().SetTitleOffset(0.91)
-summary.SetMarkerColor(4)
-summary.SetMarkerStyle(7)  
 summary.Draw("AP")
 

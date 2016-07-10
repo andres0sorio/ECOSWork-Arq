@@ -2,24 +2,25 @@
 class User(object):
     def __init__(self):
         """standard constructor"""
-        self.identificationNumber = 0
-        self.userProfile = "patient"
+        self.identification = 0
+        self.user_profile = "user"
         self.name = "A"
-        self.lastName = "Z"
+        self.last_name = "Z"
         self.email = "xx@xx"
         self.password = "xxxx"
+        self.salt = "xacx"
 
     def setIdentificationNumber(self, identificationNumber):
-        self.identificationNumber = identificationNumber
+        self.identification = identificationNumber
 
     def setUserProfile(self, userProfile):
-        self.userProfile = userProfile
+        self.user_profile = userProfile
 
     def setName(self, name):
         self.name = name
 
     def setLastName(self, lastName):
-        self.lastName = lastName
+        self.last_name = lastName
 
     def setEmail(self,email):
         self.email = email
@@ -27,18 +28,22 @@ class User(object):
     def setPassword(self,password):
         self.password = password
 
+    def setSalt(self,salt):
+        self.salt = salt
+
     def getData(self):
         line = []
-        line.append(str(self.identificationNumber))
-        line.append(self.userProfile)
+        line.append(str(self.identification))
+        line.append(self.user_profile)
         line.append(self.name)
-        line.append(self.lastName)
+        line.append(self.last_name)
         line.append(self.email)
         line.append(self.password)
+        line.append(self.salt)
         return ','.join(line)
 
     def getIdentificationNumber(self):
-        return self.identificationNumber
+        return self.identification
         
     def __eq__(self, other): 
         return self.__dict__ == other.__dict__

@@ -18,7 +18,7 @@
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">1000</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">60</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
         <longProp name="ThreadGroup.start_time">1465602104000</longProp>
         <longProp name="ThreadGroup.end_time">1465602104000</longProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
@@ -42,11 +42,11 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">157.253.17.27</stringProp>
-          <stringProp name="HTTPSampler.port">4567</stringProp>
+          <stringProp name="HTTPSampler.domain">server.as-experiments.test</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
-          <stringProp name="HTTPSampler.protocol">https</stringProp>
+          <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/api/user/create</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -112,7 +112,7 @@
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">/home/aosorio/GIT/ECOSWork/Arquitectura/Exp02/JMeter/Box1-Remote/07-07-2016/concurrency-1000-nginx.csv</stringProp>
+          <stringProp name="filename">/home/aosorio/GIT/ECOSWork/Arquitectura/Exp02/JMeter/Balancer/08-07-2016/results-1000.csv</stringProp>
         </ResultCollector>
         <hashTree/>
       </hashTree>
