@@ -12,7 +12,7 @@
 
   in.open("data/08-07-2016/experiment-latency.dat");
   
-  double time;
+  double xtime;
   int np = 0; 
   int ndataset = 0;
   double xx;
@@ -93,7 +93,7 @@
   histos[0]->Draw();
 
   histos[1]->SetFillColor(38);
-  histos[2]->SetFillColor(38);
+  histos[2]->SetFillColor(4);
 
   histos[1]->Draw("SAME");
   histos[2]->Draw("SAME");
@@ -104,6 +104,11 @@
   legend->AddEntry (histos[2], "Balancer+SSL", "f" );
   
   legend->Draw();
+
+  std::cout << histos[0]->GetStdDev() << histos[0]->GetStdDevError() << std::endl;
+  std::cout << histos[1]->GetStdDev() << histos[1]->GetStdDevError() << std::endl;
+  std::cout << histos[2]->GetStdDev() << histos[2]->GetStdDevError() << std::endl;
+  
   
 
 }

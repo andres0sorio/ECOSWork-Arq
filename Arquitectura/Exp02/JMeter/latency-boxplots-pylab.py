@@ -30,7 +30,7 @@ if options.output is None:
 
 infile = options.input
 outfile = options.output
-poslatency = 5
+
 
 logging.basicConfig(filename='quick-pylab.log',level=logging.DEBUG)
 
@@ -50,7 +50,8 @@ def readData( infile ):
     http_success = 0
     http_error = 0
     nlines = 0
-
+    poslatency = 5
+    
     with open(infile) as inputfile:
 	    
 	    for line in inputfile:
@@ -121,6 +122,9 @@ ax.get_yaxis().tick_left()
 ax.set_xlabel('Concurrent users')
 ax.set_ylabel('Latency [ms]')
 ax.set_yscale('log')
+
+ax.set_ylim([1,100000])
+ax.plot((0, 7000), (1000, 1000), 'b-', ls='dashed')
 
 locs, lbs = pylab.xticks()
 pylab.setp(lbs, rotation=45)

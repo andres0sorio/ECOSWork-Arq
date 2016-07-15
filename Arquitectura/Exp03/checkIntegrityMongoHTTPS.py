@@ -20,11 +20,13 @@ import logging
 #................................................................
 
 cedula = 703927262
-email = "foobar@doctor.com" # authorized profile
+#email = "foobar@doctor.com" # authorized profile
+email ="autenticated_user@gmail.com"
 
 #................................................................
 
 host = 'https://localhost:4567/api/doc/get'
+
 sim_data = 'data/simulated_records.dat'
 
 logging.basicConfig(filename='logs/checkIntegrityMongoHTTPS.log',level=logging.DEBUG, format='%(asctime)s %(message)s')
@@ -88,6 +90,7 @@ def checkIntegrity(fname):
         for cedula in sorted(episodes_cedula.keys()):
 
             data = '{ cedula : ' + str(cedula) + ', email : ' + '"' + email + '"' + ' }'
+            print data
             consult_results = getJson(host,data)
 
             #print consult_results[0]

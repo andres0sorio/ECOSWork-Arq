@@ -20,12 +20,13 @@ import logging
 #................................................................
 
 cedula = 703927262
-email = "foobar@doctor.com" # authorized profile
+#email = "foobar@doctor.com" # authorized profile
+email ="autenticated_user@gmail.com"
 
 #................................................................
 
 #host = 'http://192.168.1.102:4567/api/doc/get'
-#host = 'http://localhost:4567/api/doc/get'
+host = 'http://localhost:4567/api/doc/get'
 
 sim_data = 'data/simulated_records.dat'
 

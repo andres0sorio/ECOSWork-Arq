@@ -34,6 +34,9 @@ xmax = 0.0
 timeint = 0.500
 convfactor = (1.0/timeint)
 poslatency = 5 #for backward compatibility with old data
+poscode = 2 
+
+thr_summary = open('thr_summary.dat','w')
 
 def openResults( resultsfile ):
     lbs = []
@@ -70,13 +73,21 @@ for fname in filenames:
         for line in inputfile:
 
             data = line[:-1].split(',')
-	    if len(data) > 7:
+	    if len(data) > 8:
 		    poslatency = 10
-
+		    poscode = 2
+	    elif len(data) > 7 and len(data) < 10:
+		    poslatency = 6
+		    poscode = 2
 	    try:
 		    latency = float(data[poslatency]) 
 		    timestamp = int( data[0] )
-		    httpcode  = int( data[2] )
+
+		    if len(data) > 7:
+			    httpcode  = int( data[poscode] )
+		    else:
+			    httpcode = 200 # for backward comptability with old data
+		    
 		    if httpcode == 200:
 			    if timestamp in timenorm:
 				    timenorm[timestamp].append(latency)
@@ -131,6 +142,7 @@ for fname in filenames:
 
     #summary.SetPoint(jpoint, (jpoint+1), th.mean() * convfactor )
     summary.SetPoint(jpoint, float(labels[jpoint]), th.mean() * convfactor )
+    thr_summary.write( labels[jpoint] + ',' + str( th.mean() * convfactor ) + '\n' )
     
     cname = "throughput_" + fname.split('/')[2].split('.')[0]
     
@@ -223,3 +235,4 @@ summary.GetYaxis().SetTitleSize(0.05)
 summary.GetYaxis().SetTitleOffset(0.91)
 summary.Draw("AP")
 
+thr_summary.close()

@@ -1,28 +1,24 @@
 #!/usr/bin/python
 
 """
-send URL request (POST) to write a json document to our Mongo DB
-writes latency results to a file for latter processing
+sends URL request (POST) to consult patient episodes
+checks authorization
 """
-import sys
-sys.path.append('../')
-from ExpPkg import JsonEpisodeHelper
 
 import json
 import urllib2
 import time
-import random
 import unittest
 from time import sleep
-import ast
 import logging
+import ast
 
 #................................................................
 
 cedula = 703927262
-#email = "autenticated_user@gmail.com"
-email = "foobar@doctor.com"
-#email = "test@correo.com"
+email = "autenticated_user@gmail.com"
+#email = "foobar@doctor.com"
+
 #................................................................
 
 url = 'http://localhost:4567/api/doc/get'
@@ -46,9 +42,9 @@ def getJson(url,data):
     
     except urllib2.URLError, e:
         logging.error('URLError = ' + str(e.reason) )
-        return e.code
+        return e.code, 0
 
 data = '{ cedula : ' + str(cedula) + ', email : ' + '"' + email + '"' + ' }'
 logging.info(data)
 value = getJson(url,data)
-print"return code: ", value
+print"return http code and len(registers): ", value

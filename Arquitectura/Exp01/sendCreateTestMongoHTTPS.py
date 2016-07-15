@@ -16,8 +16,8 @@ import unittest
 import logging
 from time import sleep
 
-#host = 'https://localhost:4567/api/user/create' #ok
-host = 'https://server.as-experiments.test:8089/api/user/create' # B0
+host = 'https://localhost:4567/api/user/create' #ok
+#host = 'https://server.as-experiments.test:8089/api/user/create' # B0
 
 pointsP1 = []
 waittime = 0.005
@@ -92,7 +92,7 @@ def runLatencyExperiment(ntimes):
             
         sleep(0.010)
 
-runLatencyExperiment(1000)
+runLatencyExperiment(10)
 
 output.close()
 output_3xcols.close()

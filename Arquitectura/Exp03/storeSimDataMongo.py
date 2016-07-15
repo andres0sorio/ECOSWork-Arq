@@ -16,8 +16,8 @@ import unittest
 import logging
 from time import sleep
 
-host = 'http://server.as-experiments.test:8080/api/user/create'
-#host = 'http://localhost:4567/api/user/create'
+#host = 'http://server.as-experiments.test:8080/api/user/create'
+host = 'http://localhost:4567/api/user/create'
 
 pointsP1 = []
 waittime = 0.005

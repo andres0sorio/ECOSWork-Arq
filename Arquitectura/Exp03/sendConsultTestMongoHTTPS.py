@@ -26,6 +26,7 @@ email = "autenticated_user@gmail.com"
 
 host = 'https://localhost:4567/api/doc/get'
 
+
 logging.basicConfig(filename='logs/sendConsultTestMongoHTTPS.log',level=logging.DEBUG)
 logging.info('sendConsultTestMongoHTTPS.py')
 
@@ -34,7 +35,9 @@ def getJson(host,data):
     headers = {'Content-Type': 'application/json'}
     try:
         start = time.time()
-        response = requests.post( host, data=json.dumps(data), headers=headers, verify=False)
+        response = requests.post( host, data=json.dumps(data), verify=False)
+        ##response = requests.post( host, data=json.dumps(data), headers=headers, verify=False)
+        print response.headers
         end = time.time()
         print response
         try:
@@ -56,7 +59,7 @@ def getJson(host,data):
 
 
 
-data = '{ cedula : ' + str(cedula) + ', email : ' + '"' + email + '"' + ' }'
+data = '{ cedula : ' + str(cedula) + ', email : ' + '\'' + email + '\'' + ' }'
 logging.info(data)
 value = getJson(host,data)
 print"return code: ", value
