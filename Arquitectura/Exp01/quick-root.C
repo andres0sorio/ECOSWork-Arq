@@ -20,7 +20,7 @@
   
   TH1D * histos[15]; //we need approx. 15 TGraphs (1 per dataset)
   
-  histos[0] = new TH1D("Exp1","Writting episodes latency histogram(s)"  ,100, 0.0, 100);
+  histos[0] = new TH1D("Exp1","Sending POST requests to our Test Application"  ,100, 0.0, 100);
   histos[1] = new TH1D("Exp2","Nginx balancer Latency",100, 0.0, 100);
   histos[2] = new TH1D("Exp3","Nginx balancer Latency",100, 0.0, 100);
   
@@ -109,6 +109,7 @@
   std::cout << histos[1]->GetStdDev() << histos[1]->GetStdDevError() << std::endl;
   std::cout << histos[2]->GetStdDev() << histos[2]->GetStdDevError() << std::endl;
   
+  canvas->Print("Latency_plot_exps_SSL.png");
   
 
 }
